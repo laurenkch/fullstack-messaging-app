@@ -29,7 +29,7 @@ DEBUG = True
 ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
-    'fullstack-messaging-app-lkoch.heroku.app.com' 
+    'fullstack-messaging-app-lkoch.heroku.app.com'
 ]
 
 
@@ -41,16 +41,18 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'whtienoise.runserver_nostatic',
+    'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
 
     # 'messages.apps.MessagesConfig',
     'frontend.apps.FrontendConfig'
+
+
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whtienoise.middleware.WhiteNoiseMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -134,7 +136,7 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-#Static File Directories
+# Static File Directories
 # https://docs.djangoproject.com/en/4.0/ref/settings/#staticfiles-dirs
 
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'frontend/static/build/static'),)
