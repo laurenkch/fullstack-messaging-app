@@ -5,7 +5,7 @@ function ThreadList() {
 
     return (
         <div>
-            this is the threadlist
+            threadlist
         </div>
 
     )

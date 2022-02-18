@@ -4,7 +4,7 @@ import NewMessageField from './NewMessageField';
 function ThreadDetailView() {
 
     return (
-        <div>This is the thread detail view. I am made up of a <Message/>. And also a <NewMessageField/></div>
+        <div>thread detail view. I am made up of a <Message/> and also a <NewMessageField/></div>
     )
 }
 

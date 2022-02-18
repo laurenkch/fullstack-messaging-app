@@ -2,7 +2,7 @@
 function Message() {
 
     return (
-        <div>Message</div>
+        <div>message</div>
     )
 }
 
