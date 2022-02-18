@@ -5,10 +5,11 @@ from .models import Thread, Message
 class ThreadSerializer(serializers.ModelSerializer):
     class Meta:
         model = Thread
-        fields = ('users', 'name')
+        fields = ('id','name')
 
 
 class MessageSerializer(serializers.ModelSerializer):
+    # username = serializers.ReadOnlyField(source='user.username')
     class Meta:
         model = Message
-        fields = ('user', 'message', 'thread')
+        fields = ('id','user', 'message', 'thread')
