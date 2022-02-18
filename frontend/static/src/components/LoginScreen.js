@@ -28,31 +28,30 @@ function Login(props) {
     const handleSubmit = async event => {
         event.preventDefault();
 
-        const options = {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': Cookies.get('csrftoken'),
-            },
-            body: JSON.stringify(state),
-        };
+            const options = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': Cookies.get('csrftoken'),
+                },
+                body: JSON.stringify(state),
+            };
 
-        const response = await fetch("/rest-auth/login/", options).catch(
-            handleError
-        );
+            const response = await fetch("/rest-auth/login/", options).catch(
+                handleError
+            );
 
-        if (!response.ok) {
-            throw new Error("Network response not ok");
-        } else {
-            const data = await response.json();
-            Cookies.set("Authorization", `Token ${data.key}`);
-            props.setAuth(true);
-        }
+            if (!response.ok) {
+                throw new Error("Network response not ok");
+            } else {
+                const data = await response.json();
+                Cookies.set("Authorization", `Token ${data.key}`);
+                props.setAuthoriation(true);
+            }
+        
     }
 
     return (
-        <div>
-        <h2>Login Form</h2>
         <Form onSubmit={handleSubmit}>
             <Form.Label htmlFor="username">Username</Form.Label>
             <Form.Control
@@ -83,7 +82,6 @@ function Login(props) {
             />
             <Button type="submit">Login</Button>
             </Form>
-        </div>
     )
 }
 

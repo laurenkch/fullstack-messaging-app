@@ -1,6 +1,6 @@
 import ThreadView from './components/ThreadView';
-import Login from './components/LoginScreen';
-import Register from './components/RegisterScreen';
+import LoginAndRegister from './components/LoginAndRegisterView';
+import Cookies from 'js-cookie';
 
 import { useState } from 'react';
 
@@ -8,13 +8,11 @@ import './App.css';
 
 function App() {
 
-  const [view, setView] = useState('')
+  const [authorization, setAuthoriation] = useState(!!Cookies.get('Authorization'))
 
   return (
     <div className="App">
-      <ThreadView/>
-      <Login />
-      <Register />
+      {authorization ? <ThreadView /> : <LoginAndRegister setAuthoriation={setAuthoriation}/>}
     </div>
   );
 }
