@@ -12,4 +12,4 @@ class MessageSerializer(serializers.ModelSerializer):
     # username = serializers.ReadOnlyField(source='user.username')
     class Meta:
         model = Message
-        fields = ('id','user', 'message', 'thread')
+        fields = ('id','user', 'text', 'thread')

@@ -1,10 +1,17 @@
-import Message from './MessageDetail';
 import NewMessageField from './NewMessageField';
+import Button from 'react-bootstrap/Button';
 
-function ThreadDetailView() {
+function ThreadDetailView({ messages }) {
+
+    if (!messages) {
+        return <div>Fetching messages...</div>
+    }
+
+    console.log(messages);
+    const messageHTML = messages.map((message) => <div>{message.text}<Button type='button' value={message.id}>Edit</Button><Button type='button' value={message.id}>Delete</Button></div>)
 
     return (
-        <div>thread detail view. I am made up of a <Message/> and also a <NewMessageField/></div>
+        <div>{messageHTML}<NewMessageField/></div>
     )
 }
 

@@ -4,10 +4,10 @@ import Form from 'react-bootstrap/Form';
 import Cookies from 'js-cookie';
 
 
-function ThreadList() {
+function ThreadList({ setThreadSelection, loadMessages }) {
 
     const [threads, setThreads] = useState(null)
-    const [newThread, setNewThread] = useState(null)
+    const [creatingThread, setCreatingThread] = useState(null)
     const [threadName, setThreadName] = useState('');
 
     const handleError = (err) => {
@@ -16,7 +16,7 @@ function ThreadList() {
 
    useEffect(() => {
         const getThreads = async () => {
-            const response = await fetch('/api/v1/threads').catch(handleError);
+            const response = await fetch('/api/v1/threads/').catch(handleError);
             if (!response.ok) {
                 throw new Error('Network response was not OK!');
             } else {
@@ -53,20 +53,26 @@ function ThreadList() {
 
         setThreads([...threads, { 'name': threadName }])
         setThreadName('');        
-        setNewThread(null);
+        setCreatingThread(null);
     }
 
-    const showNewThreadView = (e) => {
+    const makeNewThread = (e) => {
         e.preventDefault();
-        setNewThread(true);
+        setCreatingThread(true);
+    }
+
+    const changeThreadView = (e) => {
+        e.preventDefault();
+        setThreadSelection(e.target.value)
+        loadMessages(e.target.value);
     }
 
     if (!threads) {
         return 'Fetching threads...'
     }
-    const threadsHTML = threads.map((thread, index) => (
+    const threadsHTML = threads.map((thread) => (
         <li key={thread.id}>
-            {thread.name}
+            <Button type='button' value={thread.id } onClick={changeThreadView} >{thread.name}</Button>
         </li>
     ))
 
@@ -75,7 +81,7 @@ function ThreadList() {
             <ul>
                 {threadsHTML}
             </ul>
-            {!newThread ? <Button type='button' onClick={showNewThreadView}>New thread</Button> :
+            {!creatingThread ? <Button type='button' onClick={makeNewThread}>Create new thread</Button> :
                 <Form onSubmit={addThread}>
                     <Form.Label htmlFor='thread name'>Name</Form.Label>
                     <Form.Control

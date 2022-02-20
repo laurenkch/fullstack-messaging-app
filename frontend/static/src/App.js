@@ -1,4 +1,4 @@
-import ThreadView from './components/ThreadView';
+import ThreadView from './components/ThreadPageOutline';
 import LoginAndRegister from './components/LoginAndRegisterView';
 import Cookies from 'js-cookie';
 

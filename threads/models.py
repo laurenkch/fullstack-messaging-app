@@ -10,10 +10,10 @@ class Thread (models.Model):
 class Message (models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
                              on_delete=models.CASCADE, null=True)
-    message = models.TextField(null=True)
+    text = models.TextField(null=True)
     thread = models.ForeignKey(Thread, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
-        return(self.message)
+        return(self.text)
 
 
