@@ -1,5 +1,7 @@
 from django.db import models
 from django.conf import settings
+from rest_framework import serializers
+
 
 class Thread (models.Model):
     name = models.CharField(max_length = 255, null = True)

@@ -46,7 +46,7 @@ function Login(props) {
             } else {
                 const data = await response.json();
                 Cookies.set("Authorization", `Token ${data.key}`);
-                props.setAuthoriation(true);
+                props.setAuth(true);
             }
         
     }

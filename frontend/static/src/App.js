@@ -8,11 +8,11 @@ import './App.css';
 
 function App() {
 
-  const [authorization, setAuthoriation] = useState(!!Cookies.get('Authorization'))
+  const [auth, setAuth] = useState(!!Cookies.get('Authorization'))
 
   return (
     <div className="App">
-      {authorization ? <ThreadView /> : <LoginAndRegister setAuthoriation={setAuthoriation}/>}
+      {auth ? <ThreadView /> : <LoginAndRegister setAuth={setAuth}/>}
     </div>
   );
 }

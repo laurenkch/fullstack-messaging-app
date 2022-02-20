@@ -3,7 +3,7 @@ import ThreadDetailView from './ThreadDetailView';
 import { useState } from 'react';
 
 
-function ThreadView() {
+function ThreadView({ username}) {
     
     const [threadSelection, setThreadSelection] = useState(null)
     const [messages, setMessages] = useState(null)
@@ -27,7 +27,7 @@ function ThreadView() {
     return (
         <div>
             <ThreadList setThreadSelection={setThreadSelection} loadMessages={loadMessages}/>
-            {threadSelection && <ThreadDetailView messages={messages} /> }
+            {threadSelection && <ThreadDetailView messages={messages} setMessages={setMessages} threadSelection={threadSelection} username={username}/> }
         </div>
     )
 }

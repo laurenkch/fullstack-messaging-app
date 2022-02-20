@@ -17,9 +17,13 @@ class ThreadDetail(generics.ListCreateAPIView):
 
         thread = self.kwargs['thread']
         return Message.objects.filter(thread = thread)
+    
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
 
 class MessageDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Message.objects.all()
     serializer_class = MessageSerializer
-    
+
 
