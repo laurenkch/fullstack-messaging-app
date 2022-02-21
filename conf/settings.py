@@ -163,3 +163,5 @@ SITE_ID = 1
 # https://docs.djangoproject.com/en/3.0/ref/settings/#email-backend
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+

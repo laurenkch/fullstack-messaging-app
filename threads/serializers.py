@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from site import USER_BASE
 from rest_framework import serializers
 from .models import Thread, Message
@@ -15,3 +16,8 @@ class MessageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Message
         fields = ('id','user', 'text', 'thread', 'username')
+
+
+# class Username(serializers.ModelSerializer):
+#     class Meta:
+#         fields = ('username')

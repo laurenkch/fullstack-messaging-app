@@ -1,7 +1,9 @@
 
 from rest_framework import generics
 from .models import Thread, Message
-from .serializers import MessageSerializer, ThreadSerializer
+from .serializers import MessageSerializer, ThreadSerializer 
+from django.contrib.auth.models import User
+from django.http import HttpResponse
 
 class ThreadListAPIView(generics.ListCreateAPIView):
     queryset = Thread.objects.all()
@@ -27,3 +29,6 @@ class MessageDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = MessageSerializer
 
 
+def username(request):
+    username = request.user.username
+    return HttpResponse(username)
