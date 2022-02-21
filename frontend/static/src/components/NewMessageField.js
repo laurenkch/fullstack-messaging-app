@@ -4,13 +4,20 @@ import Button from 'react-bootstrap/Button';
 function NewMessageField({ submitNewMessage, username, message, setMessage}) {
     
     const handleInput = (e) => {
-        setMessage (e.target.value)
+
+        const { value } = e.target
+
+        setMessage((message) => ({
+            ...message,
+            'text': value,
+        }));
     }
 
     const handleSubmit = (e) => {
         e.preventDefault();
         submitNewMessage(message, username);
-        setMessage('');
+        setMessage({'text': ''});
+
     }
 
     return (

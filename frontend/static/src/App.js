@@ -3,6 +3,7 @@ import LoginAndRegister from './components/LoginAndRegisterView';
 import Cookies from 'js-cookie';
 import { useEffect } from 'react';
 import { useState } from 'react';
+import Button from 'react-bootstrap/Button';
 
 import './App.css';
 
@@ -28,8 +29,18 @@ function App() {
     getUsername();
   }, [auth])
 
+  const handleLogout = (e) => {
+    e.preventDefault();
+
+
+  }
+
   return (
     <div className="App">
+      {auth &&
+        <Button onClick={handleLogout}>Logout
+        </Button>
+      }
       {auth ? <ThreadView username={username}/> : <LoginAndRegister setAuth={setAuth} setUsername={setUsername}/>}
     </div>
   );

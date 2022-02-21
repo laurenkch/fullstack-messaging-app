@@ -3,9 +3,13 @@ import Button from 'react-bootstrap/Button';
 import Cookies from 'js-cookie';
 import { useState } from 'react';
 
-
 function ThreadDetailView({ messages, setMessages, threadSelection, username }) {
-    const [message, setMessage] = useState('');
+
+    const [message, setMessage] = useState({
+        text: '',
+        username: '',
+    });
+    const [isEditing, setIsEditing] = useState(false);
 
     const handleError = (err) => {
         console.warn(err);
@@ -13,47 +17,121 @@ function ThreadDetailView({ messages, setMessages, threadSelection, username }) 
 
     const submitNewMessage = async (message, username) => {
 
+        if (isEditing) {
+            editMessage()
+        } else {
+            const options = {
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json',
+                    'X-CSRFToken': Cookies.get('csrftoken'),
+                },
+                body: JSON.stringify({ 'text': message.text, 'thread': threadSelection }),
+            };
+            const response = await fetch(`/api/v1/threads/${threadSelection}/messages/`, options).catch(handleError);
+
+            if (!response.ok) {
+                throw new Error('Network response not ok');
+            }
+            setMessages([...messages, { 'text': message.text, 'username': username }])
+        };
+    };
+    
+    const editMessage = async () => {
+        console.log(message.text)
+        const pk = message.id
+        console.log(pk);
+
         const options = {
-            method: 'POST',
+            method: 'PUT',
             headers: {
                 'Content-type': 'application/json',
                 'X-CSRFToken': Cookies.get('csrftoken'),
             },
-            body: JSON.stringify({ 'text': message, 'thread': threadSelection }),
+            body: JSON.stringify({...message }),
         };
-        const response = await fetch(`/api/v1/threads/${threadSelection}/messages/`, options).catch(handleError);
+
+        const response = await fetch(`/api/v1/threads/${threadSelection}/messages/${pk}`, options).catch(handleError)
 
         if (!response.ok) {
-            throw new Error('Network response not ok');
-        } 
+            throw new Error('Network was not ok');
+        }
 
-        setMessages([...messages, { 'text': message, 'username': username }])
+    const newMessages = messages.map((item) => {
+        if (item.id == pk) {
+            return { ...message }
+        } else {
+            return { ...item }
+        }
+    })
+        setMessages(newMessages);
     }
 
-    const handleEdit = (e) => {
+    const enableEditMode = (e) => {
         e.preventDefault();
         const editID = parseInt(e.target.value)
+        setIsEditing(true);
         setMessage(messages.find((message) => message.id === editID))
+    }
+
+    const deleteMessage = (e) => {
+        e.preventDefault();
+        const pk = e.target.value;
+
+        const pushDelete = async () => {
+
+            const options = {
+                method: "DELETE",
+                headers: {
+                    'content-type': "application/json",
+                    'X-CSRFToken': Cookies.get('csrftoken'),
+                },
+            }
+
+            const response = await fetch(`/api/v1/threads/${threadSelection}/messages/${pk}`, options).catch(handleError)
+            if (!response.ok) {
+                throw new Error('Network was not ok');
+            }
+        }
+        pushDelete();
+        const newMessages = messages.filter((item) => (item.id != pk))
+        setMessages(newMessages)
     }
 
     if (!messages) {
         return <div>Fetching messages...</div>
     }
 
-    const messageHTML = messages.map((message, index) =>
+    const messageHTML = messages.map((item, index) =>
         <div key={index}>
             <div className="message-text">
-                {message.text}
+                {item.text}
             </div>
             <div className='username'>
-                {message.username}
+                {item.username}
             </div>
-            <Button type='button' value={message.id} onClick = {handleEdit}>Edit</Button>
-            <Button type='button' value={message.id}>Delete</Button>
+            <Button type='button' value={item.id} onClick = {enableEditMode}>Edit</Button>
+            <Button type='button' value={item.id} onClick={deleteMessage}>Delete</Button>
         </div>)
 
     return (
-        <div>{messageHTML}<NewMessageField submitNewMessage={submitNewMessage} username={username} message={message} setMessage={setMessage}/></div>
+        <div>
+            {messageHTML}
+            <NewMessageField
+                className='new-message-field'
+                submitNewMessage={submitNewMessage}
+                username={username}
+                message={message}
+                setMessage={setMessage}
+            />
+            {/* {isEditing && <EditMessageField
+                message={message}
+                setMessage={setMessage}
+                submitNewMessage={editMessage}
+            />
+            } */}
+        
+        </div>
     )
 }
 
