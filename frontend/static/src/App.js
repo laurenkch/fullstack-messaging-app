@@ -29,11 +29,30 @@ function App() {
     getUsername();
   }, [auth])
 
-  const handleLogout = (e) => {
+  const handleLogout = async e => {
     e.preventDefault();
 
+    const options = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': Cookies.get('csrftoken'),
+      }
+    };
 
-  }
+      const response = await fetch("/rest-auth/logout/", options).catch(
+        handleError
+      );
+
+      if (!response.ok) {
+        throw new Error("Network response not ok");
+      } else {
+        Cookies.remove("Authorization");
+        setAuth(false);
+        setUsername('');
+      }
+
+    }
 
   return (
     <div className="App">
