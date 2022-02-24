@@ -31,6 +31,7 @@ function ThreadDetailView({threadSelection, username }) {
     let intervalID = useRef();
 
     useEffect(() => {
+        loadMessages();
         if (intervalID.current) {
             clearInterval(intervalID.current)
         }
