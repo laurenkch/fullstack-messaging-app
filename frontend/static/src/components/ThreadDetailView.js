@@ -1,10 +1,13 @@
 import NewMessageField from './NewMessageField';
 import Button from 'react-bootstrap/Button';
 import Cookies from 'js-cookie';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
-function ThreadDetailView({ messages, setMessages, threadSelection, username }) {
+function ThreadDetailView({threadSelection, username }) {
 
+    ////////////////////////////////////////////////////////////////////////////LOAD MESSAGES
+
+    const [messages, setMessages] = useState(null)
     const [message, setMessage] = useState({
         text: '',
         username: '',
@@ -14,6 +17,28 @@ function ThreadDetailView({ messages, setMessages, threadSelection, username }) 
     const handleError = (err) => {
         console.warn(err);
     }
+
+    const loadMessages = async () => {
+        const response = await fetch(`/api/v1/threads/${threadSelection}/messages/`).catch(handleError);
+        if (!response.ok) {
+            throw new Error("Network response was not OK");
+        } else {
+            const data = await response.json();
+            setMessages(data)
+        }
+    };
+
+    let intervalID = useRef();
+
+    useEffect(() => {
+        if (intervalID.current) {
+            clearInterval(intervalID.current)
+        }
+        intervalID.current = setInterval(() => loadMessages(), 5000);
+
+    }, [threadSelection])
+
+    ////////////////////////////////////////////////////////////////////////////ADD MESSAGE
 
     const submitNewMessage = async (message, username) => {
 
@@ -37,6 +62,8 @@ function ThreadDetailView({ messages, setMessages, threadSelection, username }) 
         };
     };
     
+        ////////////////////////////////////////////////////////////////////////////EDIT MESSAGE
+
     const editMessage = async () => {
         console.log(message.text)
         const pk = message.id
@@ -73,6 +100,7 @@ function ThreadDetailView({ messages, setMessages, threadSelection, username }) 
         setIsEditing(true);
         setMessage(messages.find((message) => message.id === editID))
     }
+        ////////////////////////////////////////////////////////////////////////////DELETE MESSAGE
 
     const deleteMessage = (e) => {
         e.preventDefault();
@@ -124,13 +152,6 @@ function ThreadDetailView({ messages, setMessages, threadSelection, username }) 
                 message={message}
                 setMessage={setMessage}
             />
-            {/* {isEditing && <EditMessageField
-                message={message}
-                setMessage={setMessage}
-                submitNewMessage={editMessage}
-            />
-            } */}
-        
         </div>
     )
 }

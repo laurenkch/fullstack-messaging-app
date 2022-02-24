@@ -9,7 +9,11 @@ class ThreadListAPIView(generics.ListCreateAPIView):
     queryset = Thread.objects.all()
     serializer_class = ThreadSerializer
 
-class ThreadDetail(generics.ListCreateAPIView):
+class ThreadDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Thread.objects.all()
+    serializer_class = ThreadSerializer
+
+class ThreadMessagesList(generics.ListCreateAPIView):
     serializer_class = MessageSerializer
 
     def get_queryset(self):
@@ -22,7 +26,6 @@ class ThreadDetail(generics.ListCreateAPIView):
     
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
-
 
 class MessageDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Message.objects.all()
