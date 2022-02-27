@@ -14,16 +14,19 @@ function LoginAndRegister({ setAuth }) {
     }
 
     return (
+    <div className='login-outer-wrapper'>
+        {view === 'Login' ? <h2>Login Form</h2> : <h2>Register New Account</h2>}
         <div className='login-wrapper'>
-            {view === 'Login' ? <h2>Login Form</h2> : <h2>Register New Account</h2>}
+            <div className="login-inner-wrapper">
+                {view === 'Login' ? < Login setAuth={setAuth} /> : < Register setAuth={setAuth} />}
 
-            {view === 'Login' ? < Login setAuth={setAuth} /> : < Register setAuth={setAuth} />}
-
-            {view === 'Login' ?
-                <Button type="button" value="register" onClick={changeView}>Click to register a new account instead</Button> :
-                <Button type="button" value="Login" onClick={changeView}>Click to log in to an existing account instead</Button>
-            }
+                {view === 'Login' ?
+                    <button type="button" className="bottom-text" value="register" onClick={changeView}>Register a new account instead</button> :
+                        <button type="button" className="bottom-text" value="Login" onClick={changeView}>Log in to an existing account instead</button>
+                    }
+            </div>
         </div>
+    </div>
 )
 }
 

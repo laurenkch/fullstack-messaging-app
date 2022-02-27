@@ -159,7 +159,7 @@ function ThreadList({ threadSelection, setThreadSelection}) {
          editForm =
             < li className='edit-form' key={threadToEdit.id}>
                 <Form onSubmit={editThreadName}>
-                    <Form.Label htmlFor='thread name'>Name</Form.Label>
+                    <Form.Label htmlFor='thread name'></Form.Label>
                     <Form.Control
                         type='text'
                         id='thread name'

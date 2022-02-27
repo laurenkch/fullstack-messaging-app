@@ -59,7 +59,6 @@ function Register({ setAuth }) {
 
     
     return (
-        <div className="wrapper">
             <Form onSubmit={handleSubmit}>
                 <Form.Label htmlFor='username'>Username</Form.Label>
                 <Form.Control
@@ -97,9 +96,10 @@ function Register({ setAuth }) {
                     required
                     value={state.password2}
                 />
-                <Button type='submit'>Create Account</Button>
+                <div className='login-submit-button'>
+                    <Button type='submit'>Create Account</Button>
+                </div>
             </Form>
-        </div>
     )
 }
 

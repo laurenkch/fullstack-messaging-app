@@ -17,7 +17,3 @@ class MessageSerializer(serializers.ModelSerializer):
         model = Message
         fields = ('id','user', 'text', 'thread', 'username')
 
-
-# class Username(serializers.ModelSerializer):
-#     class Meta:
-#         fields = ('username')

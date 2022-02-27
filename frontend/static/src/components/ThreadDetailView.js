@@ -146,7 +146,7 @@ function ThreadDetailView({threadSelection }) {
     let editForm= '';
     if (isEditing) {
         editForm =
-            <Form onSubmit={editMessage} key={messageToEdit.id}>
+            <Form onSubmit={editMessage} key={messageToEdit.id}className='edit-message-form'>
                 <Form.Label htmlFor='new-message'></Form.Label>
                 <Form.Control
                     id='message'
@@ -154,6 +154,7 @@ function ThreadDetailView({threadSelection }) {
                     onChange={handleInput}
                     required
                     autoComplete='off'
+                    className='edit-message-input'
                 />
                 <Button type='submit'>Edit</Button>
             </Form>

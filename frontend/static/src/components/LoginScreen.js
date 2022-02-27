@@ -80,7 +80,9 @@ function Login(props) {
                 onChange={handleInput}
                 value={state.password}
             />
-            <Button type="submit">Login</Button>
+            <div className='login-submit-button'>
+                <Button type="submit">Login</Button>
+            </div>
             </Form>
     )
 }

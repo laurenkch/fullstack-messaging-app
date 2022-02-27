@@ -1,4 +1,5 @@
 
+from functools import partial
 from rest_framework import generics
 from .models import Thread, Message
 from .serializers import MessageSerializer, ThreadSerializer 
@@ -31,6 +32,10 @@ class MessageDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Message.objects.all()
     serializer_class = MessageSerializer
 
-    # def username(request):
-    #     username = request.user.username
-    #     return HttpResponse(username)
+    # def update(self, serializer):
+    #     serializer.save(user=self.request.user)
+
+    # def perform_create(self, serializer):
+    #     serializer.save(user=self.request.user)
+
+    
