@@ -4,7 +4,7 @@ import Form from 'react-bootstrap/Form';
 import Cookies from 'js-cookie';
 
 
-function ThreadList({ threadSelection, setThreadSelection, startLoading}) {
+function ThreadList({ threadSelection, setThreadSelection}) {
 
     const INITIAL_STATE = {
         'id': '',
@@ -65,6 +65,7 @@ function ThreadList({ threadSelection, setThreadSelection, startLoading}) {
         setThreads([...threads, data])
         setThreadToEdit(INITIAL_STATE);        
         setIsCreatingThread(false);
+        setThreadSelection(data.id);
     }
 
     const makeNewThread = (e) => {
@@ -101,7 +102,6 @@ function ThreadList({ threadSelection, setThreadSelection, startLoading}) {
         const newThreadDetails = await response.json();
         const index = threads.indexOf((thread) => thread.id === newThreadDetails.id);
         const newthreadlist =threads.splice(index, 1, newThreadDetails)
-        console.log(newthreadlist)
         setIsEditing(false);
     }
 
@@ -127,13 +127,16 @@ function ThreadList({ threadSelection, setThreadSelection, startLoading}) {
             }
         }
         pushDelete();
-        const index = threads.indexOf((item) => item.id === id)
-        const newThreadList = threads
-        newThreadList.splice(index, 1)
-        setThreads(newThreadList)
+        const item = threads.find((item) => item.id == id);
+        const index = threads.indexOf(item);
+        const data = threads.slice()  
+        data.splice(index, 1)
+        setThreads(data);
 
-        // this works, but doesn't seem to update the display. not sure why setThreads isn't re-rendering the components at the moment. 
-    }
+        setThreadSelection('');
+
+        // only added slice to this to make a new copy of the array, wouldn't re-render otherwise since the arrays were exactly equal. 
+    };
 
  //////////////////////////////////////////////////////////////////////////////// THREAD NAVIGATION
 

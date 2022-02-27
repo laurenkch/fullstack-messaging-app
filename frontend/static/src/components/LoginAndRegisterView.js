@@ -3,7 +3,7 @@ import Login from './LoginScreen';
 import Register from './RegisterScreen'
 import Button from 'react-bootstrap/Button';
 
-function LoginAndRegister({ setAuth, setUsername }) {
+function LoginAndRegister({ setAuth }) {
 
     const [view, setView] = useState('Login')
 
@@ -17,7 +17,7 @@ function LoginAndRegister({ setAuth, setUsername }) {
         <div>
             {view === 'Login' ? <h2>Login Form</h2> : <h2>Register New Account</h2>}
 
-            {view === 'Login' ? < Login setAuth={setAuth} setUsername={setUsername} /> : < Register setAuth={setAuth} setUsername={setUsername}/>}
+            {view === 'Login' ? < Login setAuth={setAuth} /> : < Register setAuth={setAuth} />}
 
             {view === 'Login' ?
                 <Button type="button" value="register" onClick={changeView}>Click to register a new account instead</Button> :

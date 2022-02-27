@@ -47,7 +47,6 @@ function Login(props) {
                 const data = await response.json();
                 Cookies.set("Authorization", `Token ${data.key}`);
                 props.setAuth(true);
-                props.setUsername(state.username);
             }
         
     }

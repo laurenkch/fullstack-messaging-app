@@ -3,7 +3,7 @@ import Button from 'react-bootstrap/Button';
 import Cookies from 'js-cookie';
 import { useState, useEffect, useRef } from 'react';
 
-function ThreadDetailView({threadSelection, username }) {
+function ThreadDetailView({threadSelection }) {
 
     ////////////////////////////////////////////////////////////////////////////LOAD MESSAGES
 
@@ -35,13 +35,13 @@ function ThreadDetailView({threadSelection, username }) {
         if (intervalID.current) {
             clearInterval(intervalID.current)
         }
-        intervalID.current = setInterval(() => loadMessages(), 5000);
+        intervalID.current = setInterval(() => loadMessages(), 10000);
 
     }, [threadSelection])
 
     ////////////////////////////////////////////////////////////////////////////ADD MESSAGE
 
-    const submitNewMessage = async (message, username) => {
+    const submitNewMessage = async (message) => {
 
         if (isEditing) {
             editMessage()
@@ -59,7 +59,8 @@ function ThreadDetailView({threadSelection, username }) {
             if (!response.ok) {
                 throw new Error('Network response not ok');
             }
-            setMessages([...messages, { 'text': message.text, 'username': username }])
+            const data = await response.json();
+            setMessages([...messages, data])
         };
     };
     
@@ -149,7 +150,6 @@ function ThreadDetailView({threadSelection, username }) {
             <NewMessageField
                 className='new-message-field'
                 submitNewMessage={submitNewMessage}
-                username={username}
                 message={message}
                 setMessage={setMessage}
             />

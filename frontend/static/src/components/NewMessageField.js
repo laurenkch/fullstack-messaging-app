@@ -1,7 +1,7 @@
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 
-function NewMessageField({ submitNewMessage, username, message, setMessage}) {
+function NewMessageField({ submitNewMessage, message, setMessage}) {
     
     const handleInput = (e) => {
 
@@ -15,7 +15,7 @@ function NewMessageField({ submitNewMessage, username, message, setMessage}) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        submitNewMessage(message, username);
+        submitNewMessage(message);
         setMessage({'text': ''});
 
     }

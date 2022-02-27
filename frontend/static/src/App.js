@@ -10,24 +10,10 @@ import './App.css';
 function App() {
 
   const [auth, setAuth] = useState(!!Cookies.get('Authorization'))
-  const [username, setUsername] = useState('');
 
   const handleError = (err) => {
     console.warn(err);
   }
-
-  useEffect(() => {
-    const getUsername = async () => {
-      const response = await fetch('/api/v1/threads/user/').catch(handleError);
-      if (!response.ok) {
-        throw new Error('Network response was not OK!');
-      } else {
-        const data = await response.text();
-        setUsername(data);
-      }
-    }
-    getUsername();
-  }, [auth])
 
   const handleLogout = async e => {
     e.preventDefault();
@@ -49,7 +35,6 @@ function App() {
       } else {
         Cookies.remove("Authorization");
         setAuth(false);
-        setUsername('');
       }
 
     }
@@ -60,7 +45,7 @@ function App() {
         <Button onClick={handleLogout}>Logout
         </Button>
       }
-      {auth ? <ThreadView username={username}/> : <LoginAndRegister setAuth={setAuth} setUsername={setUsername}/>}
+      {auth ? <ThreadView/> : <LoginAndRegister setAuth={setAuth}/>}
     </div>
   );
 }

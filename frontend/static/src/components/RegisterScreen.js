@@ -4,7 +4,7 @@ import Button from 'react-bootstrap/Button';
 import Cookies from 'js-cookie';
 
 
-function Register({ setAuthorization, setUserName }) {
+function Register({ setAuth }) {
 
   const [state, setState] = useState({
         username: '',
@@ -50,8 +50,7 @@ function Register({ setAuthorization, setUserName }) {
             } else {
                 const data = await response.json();
                 Cookies.set("Authorization", `Token ${data.key}`);
-                setAuthorization(true);
-                setUserName(state.username)
+                setAuth(true);
             }
         } else {
             alert('passwords must match');

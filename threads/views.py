@@ -31,7 +31,6 @@ class MessageDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Message.objects.all()
     serializer_class = MessageSerializer
 
-
-def username(request):
-    username = request.user.username
-    return HttpResponse(username)
+    # def username(request):
+    #     username = request.user.username
+    #     return HttpResponse(username)
