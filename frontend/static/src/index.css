@@ -71,7 +71,7 @@ body {
 .thread-list .btn-primary, .thread-list .btn-primary:disabled {
   background-color:rgb(26, 27, 110);
   border: none;
-  margin: 3px;
+  margin: 5px;
 }
 
 .thread-display {
