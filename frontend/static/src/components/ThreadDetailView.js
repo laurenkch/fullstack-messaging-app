@@ -1,7 +1,10 @@
 import NewMessageField from './NewMessageField';
+import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Cookies from 'js-cookie';
 import { useState, useEffect, useRef } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faX } from '@fortawesome/free-solid-svg-icons';
 
 function ThreadDetailView({threadSelection }) {
 
@@ -13,13 +16,14 @@ function ThreadDetailView({threadSelection }) {
         username: '',
     });
     const [isEditing, setIsEditing] = useState(false);
+    const [messageToEdit, setMessageToEdit] = useState('');
 
     const handleError = (err) => {
         console.warn(err);
     }
 
     const loadMessages = async () => {
-        const response = await fetch(`/api/v1/threads/${threadSelection}/messages/`).catch(handleError);
+        const response = await fetch(`/api/v1/threads/${threadSelection.id}/messages/`).catch(handleError);
         if (!response.ok) {
             throw new Error("Network response was not OK");
         } else {
@@ -43,33 +47,43 @@ function ThreadDetailView({threadSelection }) {
 
     const submitNewMessage = async (message) => {
 
-        if (isEditing) {
-            editMessage()
-        } else {
             const options = {
                 method: 'POST',
                 headers: {
                     'Content-type': 'application/json',
                     'X-CSRFToken': Cookies.get('csrftoken'),
                 },
-                body: JSON.stringify({ 'text': message.text, 'thread': threadSelection }),
+                body: JSON.stringify({ 'text': message.text, 'thread': threadSelection.id }),
             };
-            const response = await fetch(`/api/v1/threads/${threadSelection}/messages/`, options).catch(handleError);
+            const response = await fetch(`/api/v1/threads/${threadSelection.id}/messages/`, options).catch(handleError);
 
             if (!response.ok) {
                 throw new Error('Network response not ok');
             }
             const data = await response.json();
             setMessages([...messages, data])
-        };
     };
     
         ////////////////////////////////////////////////////////////////////////////EDIT MESSAGE
+    
+    const enableEditMode = (item) => {
+        setIsEditing(true);
+        setMessageToEdit(item);
+    }
 
-    const editMessage = async () => {
-        console.log(message.text)
-        const pk = message.id
-        console.log(pk);
+    const handleInput = (e) => {
+
+        const { value } = e.target
+
+        setMessageToEdit((messageToEdit) => ({
+            ...messageToEdit,
+            'text': value,
+        }));
+    }
+
+    const editMessage = async (e) => {
+        e.preventDefault();
+        const pk = messageToEdit.id
 
         const options = {
             method: 'PUT',
@@ -77,10 +91,10 @@ function ThreadDetailView({threadSelection }) {
                 'Content-type': 'application/json',
                 'X-CSRFToken': Cookies.get('csrftoken'),
             },
-            body: JSON.stringify({...message }),
+            body: JSON.stringify({ ...messageToEdit }),
         };
 
-        const response = await fetch(`/api/v1/threads/${threadSelection}/messages/${pk}`, options).catch(handleError)
+        const response = await fetch(`/api/v1/threads/${threadSelection.id}/messages/${pk}`, options).catch(handleError)
 
         if (!response.ok) {
             throw new Error('Network was not ok');
@@ -88,25 +102,19 @@ function ThreadDetailView({threadSelection }) {
 
     const newMessages = messages.map((item) => {
         if (item.id == pk) {
-            return { ...message }
+            return { ...messageToEdit }
         } else {
             return { ...item }
         }
     })
         setMessages(newMessages);
+        setIsEditing(false);
     }
 
-    const enableEditMode = (e) => {
-        e.preventDefault();
-        const editID = parseInt(e.target.value)
-        setIsEditing(true);
-        setMessage(messages.find((message) => message.id === editID))
-    }
         ////////////////////////////////////////////////////////////////////////////DELETE MESSAGE
 
-    const deleteMessage = (e) => {
-        e.preventDefault();
-        const pk = e.target.value;
+    const deleteMessage = (message) => {
+        const pk = message.id;
 
         const pushDelete = async () => {
 
@@ -118,7 +126,7 @@ function ThreadDetailView({threadSelection }) {
                 },
             }
 
-            const response = await fetch(`/api/v1/threads/${threadSelection}/messages/${pk}`, options).catch(handleError)
+            const response = await fetch(`/api/v1/threads/${threadSelection.id}/messages/${pk}`, options).catch(handleError)
             if (!response.ok) {
                 throw new Error('Network was not ok');
             }
@@ -128,24 +136,70 @@ function ThreadDetailView({threadSelection }) {
         setMessages(newMessages)
     }
 
+
+  //////////////////////////////////////////////////////////////////////DISPLAY LOGIC
+
     if (!messages) {
         return <div>Fetching messages...</div>
     }
 
-    const messageHTML = messages.map((item, index) =>
-        <div key={index}>
-            <div className="message-text">
-                {item.text}
+    let editForm= '';
+    if (isEditing) {
+        editForm =
+            <Form onSubmit={editMessage} key={messageToEdit.id}>
+                <Form.Label htmlFor='new-message'></Form.Label>
+                <Form.Control
+                    id='message'
+                    value={messageToEdit.text}
+                    onChange={handleInput}
+                    required
+                    autoComplete='off'
+                />
+                <Button type='submit'>Edit</Button>
+            </Form>
+    }
+
+    const messageForm = (self) =>
+        <div key={self.id} className='message'>
+            <Button type='button' className="delete-message" onClick={()=>deleteMessage(self)}><FontAwesomeIcon icon={faX} /></Button>
+            <div>
+                <div className='username'>
+                    {self.username}
+                </div>
+                <div className="message-text" onClick={() => enableEditMode(self)}>
+                    {self.text}
+                </div>
             </div>
-            <div className='username'>
-                {item.username}
+        </div>
+    
+
+    let messageHTML = '';
+    if (isEditing) {
+
+        messageHTML = messages.map((message) => message.id == messageToEdit.id ? editForm : messageForm(message))
+
+    } else {
+
+        messageHTML = messages.map((item, index) => (
+            <div key={index} className='message'>
+                <Button type='button' className="delete-message" onClick={()=>deleteMessage(item)}><FontAwesomeIcon icon={faX} /></Button>
+                <div>
+                    <div className='username'>
+                        {item.username}
+                    </div>
+                    <div className="message-text" onClick={() => enableEditMode(item)}>
+                        {item.text}
+                    </div>
+                </div>
             </div>
-            <Button type='button' value={item.id} onClick = {enableEditMode}>Edit</Button>
-            <Button type='button' value={item.id} onClick={deleteMessage}>Delete</Button>
-        </div>)
+        ))
+    }
 
     return (
-        <div>
+        <div className='thread-display'>
+            <div className='thread-title'>
+                <h2>{threadSelection.name}</h2>
+            </div>
             {messageHTML}
             <NewMessageField
                 className='new-message-field'

@@ -2,15 +2,15 @@ import ThreadList from './ThreadList';
 import ThreadDetailView from './ThreadDetailView';
 import { useState, useRef } from 'react';
 
-function ThreadView({ username }) {
+function ThreadView() {
     
     const [threadSelection, setThreadSelection] = useState(null)
 
              
     return (
-        <div>
+        <div className = 'wrapper'>
             <ThreadList setThreadSelection={setThreadSelection}/>
-            {threadSelection && <ThreadDetailView threadSelection={threadSelection} username={username} /> }
+            {threadSelection && <ThreadDetailView threadSelection={threadSelection} /> }
         </div>
     )
 }

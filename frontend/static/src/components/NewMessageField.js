@@ -23,13 +23,16 @@ function NewMessageField({ submitNewMessage, message, setMessage}) {
     return (
 
         <Form onSubmit={handleSubmit}>
-            <Form.Label htmlFor='message'>Message</Form.Label>
+            <Form.Label htmlFor='message'></Form.Label>
             <Form.Control
+                as="textarea"
+                rows={3}
                 id='message'
                 value={message.text}
                 onChange={handleInput}
                 required
                 autoComplete='off'
+                className='message-textarea'
             />
             <Button type='submit'>Send</Button>
         </Form>

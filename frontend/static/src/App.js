@@ -1,7 +1,6 @@
 import ThreadView from './components/ThreadPageOutline';
 import LoginAndRegister from './components/LoginAndRegisterView';
 import Cookies from 'js-cookie';
-import { useEffect } from 'react';
 import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 
@@ -42,8 +41,10 @@ function App() {
   return (
     <div className="App">
       {auth &&
-        <Button onClick={handleLogout}>Logout
-        </Button>
+        <div className='header'>
+        <Button className='logout-button' onClick={handleLogout}>Logout
+          </Button>
+        </div>
       }
       {auth ? <ThreadView/> : <LoginAndRegister setAuth={setAuth}/>}
     </div>

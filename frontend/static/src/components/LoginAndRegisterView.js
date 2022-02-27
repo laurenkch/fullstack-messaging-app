@@ -14,7 +14,7 @@ function LoginAndRegister({ setAuth }) {
     }
 
     return (
-        <div>
+        <div className='login-wrapper'>
             {view === 'Login' ? <h2>Login Form</h2> : <h2>Register New Account</h2>}
 
             {view === 'Login' ? < Login setAuth={setAuth} /> : < Register setAuth={setAuth} />}

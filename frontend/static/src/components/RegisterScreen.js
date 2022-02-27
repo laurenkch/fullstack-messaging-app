@@ -59,7 +59,7 @@ function Register({ setAuth }) {
 
     
     return (
-        <div>
+        <div className="wrapper">
             <Form onSubmit={handleSubmit}>
                 <Form.Label htmlFor='username'>Username</Form.Label>
                 <Form.Control

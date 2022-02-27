@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Cookies from 'js-cookie';
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPlus, faX, faPencil } from '@fortawesome/free-solid-svg-icons';
 
 function ThreadList({ threadSelection, setThreadSelection}) {
 
@@ -65,20 +66,18 @@ function ThreadList({ threadSelection, setThreadSelection}) {
         setThreads([...threads, data])
         setThreadToEdit(INITIAL_STATE);        
         setIsCreatingThread(false);
-        setThreadSelection(data.id);
+        setThreadSelection(data);
     }
 
-    const makeNewThread = (e) => {
-        e.preventDefault();
-        setIsCreatingThread(true);
-    }
+    // const makeNewThread = (e) => {
+    //     e.preventDefault();
+    //     setIsCreatingThread(true);
+    // }
 
 //////////////////////////////////////////////////////////////////////////////// EDIT PRE-EXISTING THREAD
 
-    const clickEditThread = (e) => {
+    const clickEditThread = (thread) => {
         setIsEditing(true);
-        let pk = e.target.value
-        const thread = threads.find((thread) => (thread.id == pk))
         setThreadToEdit(thread)
     }
 
@@ -99,17 +98,20 @@ function ThreadList({ threadSelection, setThreadSelection}) {
             if (!response.ok) {
                 throw new Error("Network response was not OK")
             }
-        const newThreadDetails = await response.json();
-        const index = threads.indexOf((thread) => thread.id === newThreadDetails.id);
-        const newthreadlist =threads.splice(index, 1, newThreadDetails)
+        const newthread = await response.json();
+        
+        const item = threads.find((item) => item.id == newthread.id);
+        const index = threads.indexOf(item);
+        const copy = threads.slice()
+        copy.splice(index, 1, newthread)
+        setThreads(copy);
         setIsEditing(false);
     }
 
 //////////////////////////////////////////////////////////////////////////////// DELETE THREAD
     
-    const deleteThread = (e) => {
-        e.preventDefault();
-        const id = e.target.value;
+    const deleteThread = (thread) => {
+        const id = thread.id;
 
         const pushDelete = async () => {
 
@@ -140,9 +142,9 @@ function ThreadList({ threadSelection, setThreadSelection}) {
 
  //////////////////////////////////////////////////////////////////////////////// THREAD NAVIGATION
 
-    const changeThreadView = (e) => {
-        e.preventDefault();
-        setThreadSelection(e.target.value)
+    const changeThreadView = (thread) => {
+        setThreadSelection(thread);
+
     }
 
  //////////////////////////////////////////////////////////////////////////////// DISPLAY LOGIC
@@ -173,13 +175,7 @@ function ThreadList({ threadSelection, setThreadSelection}) {
 
     const threadForm = (self) => 
         <li key={self.id}>
-        <Button type='button' value={self.id} onClick={changeThreadView} >{self.name}</Button>
-        <Button type='button' value={self.id} id='edit name' onClick={clickEditThread}>
-            Edit Thread Name
-        </Button>
-        <Button type='button' value={self.id} id='delete thread'>
-            Delete Thread
-        </Button>
+        <Button type='button' value={self.id} disabled>{self.name}</Button>
     </li>
 
     let threadsHTML = '';
@@ -190,25 +186,29 @@ function ThreadList({ threadSelection, setThreadSelection}) {
     } else {
 
         threadsHTML = threads.map((thread) => (
-            <li key={thread.id}>
-                <Button type='button' value={thread.id} onClick={changeThreadView} >{thread.name}</Button>
-                <Button type='button' value={thread.id} id='edit name' onClick={clickEditThread}>
-                    Edit Thread Name
+            <li key={thread.id} className='thread'>
+                <div>
+                <Button type='button' className="delete-thread-name" id='delete thread' onClick={() => deleteThread(thread)}>
+                    <FontAwesomeIcon icon={faX} />
+                    </Button>
+                </div>
+                <div>
+                <Button type='button' className="thread-name" onClick={() => changeThreadView(thread)} >{thread.name}</Button>
+                <Button type='button' className="edit-thread-name" id='edit name' onClick={()=>clickEditThread(thread)}>
+                    <FontAwesomeIcon icon={faPencil}/>
                 </Button>
-                <Button type='button' value={thread.id} id='delete thread' onClick={deleteThread}>
-                    Delete Thread
-                </Button>
+                </div>
             </li>
         ))
     }
 
     return (
-        <div>
+        <div className='thread-list'>
             <ul>
                 {threadsHTML}
             </ul>
-            {!isCreatingThread ? <Button type='button' onClick={makeNewThread}>Create new thread</Button> :
-                <Form onSubmit={addThread}>
+            {!isCreatingThread ? <Button type='button' onClick={() => setIsCreatingThread(true)}><FontAwesomeIcon icon={faPlus}/></Button> :
+                <Form onSubmit={addThread} className="new-thread-form">
                     <Form.Label htmlFor='thread name'>Name</Form.Label>
                     <Form.Control
                         type='text'
@@ -218,7 +218,10 @@ function ThreadList({ threadSelection, setThreadSelection}) {
                         required
                         onChange={handleInput}
                     />
+                    <div className='new-thread-buttons'>
+                    <Button type='button' onClick={()=>setIsCreatingThread(false)}>Cancel</Button>
                     <Button type='submit'>Add</Button>
+                    </div>
                 </Form>
             }
         </div>
